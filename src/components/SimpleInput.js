@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const SimpleInput = (props) => {
   const nameInput = useRef();
@@ -12,6 +12,12 @@ const SimpleInput = (props) => {
     setEnteredName(event.target.value);
   };
 
+  const nameInputIsInvalid = !enteredNameValid && enteredNameTouched;
+
+  useEffect(() => {
+    console.log(enteredNameValid);
+  }, [enteredNameValid]);
+
   const formSubmissionHandler = (e) => {
     e.preventDefault();
 
@@ -24,11 +30,8 @@ const SimpleInput = (props) => {
     setEnteredNameValid(true);
     console.log(enteredName);
     const valueNameRef = nameInput.current.value;
-
     console.log(valueNameRef);
   };
-
-  const nameInputIsInvalid = !enteredNameValid && enteredNameTouched;
 
   const nameInputClass = nameInputIsInvalid
     ? "form-control invalid"
