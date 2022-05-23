@@ -1,62 +1,55 @@
-import React, { useState } from "react";
+import React from "react";
+import useInput from "../hooks/use-input";
+
+const firstNameIsValid = (value) => value.trim() !== "";
+const lastNameIsValid = (value) => value.trim() !== "";
+const emailIsValidate = (value) => value.includes("@");
 
 const BasicForm = () => {
-  const [firstName, setFirstName] = useState("");
-  const [touchedFirstName, setTouchedFirstName] = useState(false);
+  const {
+    value: fName,
+    isValid: fNameIsValid,
+    hasError: fNameHasError,
+    valueChangeHandler: fNameChangeHandler,
+    inputBlurHandler: fNameBlurHandler,
+    reset: resetFName,
+  } = useInput(firstNameIsValid);
 
-  const [lastName, setLastName] = useState("");
-  const [touchedLastName, setTouchedLastName] = useState(false);
+  const {
+    value: lName,
+    isValid: lNameIsValid,
+    hasError: lNameHasError,
+    valueChangeHandler: lNameChangeHandler,
+    inputBlurHandler: lNameBlurHandler,
+    reset: resetLName,
+  } = useInput(lastNameIsValid);
 
-  const [email, setEmail] = useState("");
-  const [touchedEmail, setTouchedEmail] = useState(false);
+  const {
+    value: email,
+    isValid: emailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmail,
+  } = useInput(emailIsValidate);
 
-  const firstNameIsValid = firstName.trim() !== "";
-  const firstNameHasError = !firstNameIsValid && touchedFirstName;
+  let formValid = false;
 
-  const lastNameIsValid = lastName.trim() !== "";
-  const lastNameHasError = !lastNameIsValid && touchedLastName;
-
-  const emailIsValid = email.includes("@");
-  const emailHasError = !emailIsValid && touchedEmail;
-
-  const formIsValid = false;
-
-  if (firstNameIsValid && lastNameIsValid && emailIsValid) {
-    formIsValid = true;
+  if (fNameIsValid && lNameIsValid && emailIsValid) {
+    formValid = true;
   }
-
-  const firstNameChangeHandler = (event) => {
-    setFirstName(event.target.value);
-  };
-
-  const lastNameChangeHandler = (event) => {
-    setLastName(event.target.value);
-  };
-
-  const emailChangeHandler = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const firstNameBlurHandler = () => {
-    setTouchedFirstName(true);
-  };
-
-  const lastNameBlurHandler = () => {
-    setTouchedLastName(true);
-  };
-
-  const emailBlurHandler = () => {
-    setTouchedEmail(true);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    resetFName();
+    resetLName();
+    resetEmail();
   };
-  const firstNameInputClass = firstNameHasError
+  const firstNameInputClass = fNameHasError
     ? "form-control invalid"
     : "form-control";
 
-  const lastNameInputClass = lastNameHasError
+  const lastNameInputClass = lNameHasError
     ? "form-control invalid"
     : "form-control";
 
@@ -72,11 +65,11 @@ const BasicForm = () => {
           <input
             type="text"
             id="name"
-            onChange={firstNameChangeHandler}
-            onBlur={firstNameBlurHandler}
-            value={firstName}
+            onChange={fNameChangeHandler}
+            onBlur={fNameBlurHandler}
+            value={fName}
           />
-          {firstNameHasError && (
+          {fNameHasError && (
             <p className="error-text">First Name must be a empty</p>
           )}
         </div>
@@ -85,11 +78,11 @@ const BasicForm = () => {
           <input
             type="text"
             id="name"
-            onChange={lastNameChangeHandler}
-            onBlur={lastNameBlurHandler}
-            value={lastName}
+            onChange={lNameChangeHandler}
+            onBlur={lNameBlurHandler}
+            value={lName}
           />
-          {lastNameHasError && (
+          {lNameHasError && (
             <p className="error-text">Last Name must be a empty</p>
           )}
         </div>
@@ -106,7 +99,7 @@ const BasicForm = () => {
         {emailHasError && <p className="error-text">Please email Correct</p>}
       </div>
       <div className="form-actions">
-        <button type="submit" disabled={!formIsValid}>
+        <button type="submit" disabled={!formValid}>
           Submit
         </button>
       </div>
