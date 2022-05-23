@@ -10,46 +10,38 @@ const SimpleInput = () => {
     inputBlurHandler: nameInputBlurHandler,
     reset: resetName,
   } = useInput((value) => value.trim() !== "");
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
-  const enteredEmailValid = enteredEmail.includes("@");
-  const emailInputisValid = !enteredEmailValid && enteredNameTouched;
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmail,
+  } = useInput((value) => value.includes("@"));
 
   let formIsValid = false;
 
-  if (enteredNameIsValid && enteredEmailValid) {
+  if (enteredNameIsValid && enteredEmailIsValid) {
     formIsValid = true;
   }
 
-  const changeEmailHandler = (event) => {
-    setEnteredEmail(event.target.value);
-  };
-
-  const emailInputBlurHandler = () => {
-    setEnteredNameTouched(true);
-  };
-
   const formSubmissionHandler = (e) => {
     e.preventDefault();
-
-    setEnteredNameTouched(true);
 
     if (enteredName.trim() === "") {
       return;
     }
 
     resetName();
-
-    setEnteredEmail("");
-    setEnteredNameTouched(false);
+    resetEmail();
   };
 
   const nameInputClass = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
-  const emailInputClass = emailInputisValid
+  const emailInputClass = emailInputHasError
     ? "form-control invalid"
     : "form-control";
   return (
@@ -70,11 +62,11 @@ const SimpleInput = () => {
         <input
           type="text"
           id="name"
-          onChange={changeEmailHandler}
+          onChange={emailChangeHandler}
           value={enteredEmail}
-          onBlur={emailInputBlurHandler}
+          onBlur={emailBlurHandler}
         />
-        {emailInputisValid && (
+        {emailInputHasError && (
           <p className="error-text">Please Input corret email</p>
         )}
       </div>
